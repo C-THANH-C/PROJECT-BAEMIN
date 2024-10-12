@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  category_id     Int       @id @default(autoincrement())
+  category_name   String    @db.VarChar
+  category_create DateTime? @db.Date
+  product         product[]
+}
+
+model food_store {
+  store_id          Int       @id @default(autoincrement())
+  user_id           Int?
+  store_name        String    @db.VarChar
+  address           String    @db.VarChar
+  store_information Json?     @db.Json
+  store_image       String?
+  users             users?    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  product           product[]
+}
+
+model order {
+  order_id      Int             @id @default(autoincrement())
+  user_id       Int?
+  order_create  DateTime?       @db.Timestamp(6)
+  users         users?          @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  order_product order_product[]
+  shipping      shipping[]
+}
+
+model order_product {
+  order_id       Int
+  product_id     Int
+  order_price    Int?
+  order_quantity Int?
+  order          order   @relation(fields: [order_id], references: [order_id], onDelete: Cascade, onUpdate: NoAction)
+  product        product @relation(fields: [product_id], references: [product_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([order_id, product_id])
+}
+
+model product {
+  product_id          Int             @id @default(autoincrement())
+  product_name        String          @db.VarChar
+  store_id            Int?
+  category_id         Int?
+  product_image       String?
+  product_create      DateTime?       @db.Date
+  product_price       Int?
+  product_rate        Int?
+  product_quantity    Int?
+  product_description String?
+  order_product       order_product[]
+  category            category?       @relation(fields: [category_id], references: [category_id], onDelete: Cascade, onUpdate: NoAction)
+  food_store          food_store?     @relation(fields: [store_id], references: [store_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model shipping {
+  ship_id     Int       @id @default(autoincrement())
+  full_name   String    @db.VarChar
+  email       String    @db.VarChar
+  phone       String    @db.VarChar
+  address     String?   @db.VarChar
+  ship_create DateTime? @db.Timestamp(6)
+  order_id    Int?
+  order       order?    @relation(fields: [order_id], references: [order_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_order_shipping")
+}
+
+model users {
+  user_id     Int          @id @default(autoincrement())
+  email       String       @unique @db.VarChar(255)
+  phone       String?      @unique @db.VarChar(15)
+  account     String       @unique @db.VarChar(100)
+  full_name   String       @db.VarChar(255)
+  address     String?      @db.VarChar(255)
+  user_image  String?
+  role        user_role
+  user_create DateTime?    @default(now())
+  password    String       @db.VarChar(100) 
+  food_store  food_store[]
+  order       order[]
+}
+
+enum user_role {
+  admin
+  store
+  user
+}

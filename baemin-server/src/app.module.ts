@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { StoreModule } from './store/store.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './authGuard/jwt.strategy';
 
 @Module({
   imports: [
@@ -16,9 +18,13 @@ import { StoreModule } from './store/store.module';
     AuthModule,
     ProductModule,
     CategoryModule,
-    StoreModule
+    StoreModule,
+    JwtModule.register({
+      global: true,
+      secret: "THANH"
+    })
   ],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, JwtStrategy],
 })
 export class AppModule {}

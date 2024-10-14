@@ -51,7 +51,7 @@ model product {
   store_id            Int?
   category_id         Int?
   product_image       String?
-  product_create      DateTime?       @db.Date
+  product_create      DateTime?      @default(now())
   product_price       Int?
   product_rate        Int?
   product_quantity    Int?

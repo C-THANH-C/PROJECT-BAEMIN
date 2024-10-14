@@ -12,9 +12,7 @@ export class AuthService {
         let checkUser = await this.prisma.users.findFirst({
             where: {
                 OR: [
-                    { account: dto.account },
                     { email: dto.email },
-                    { phone: dto.phone }
                 ]
             }
         })
@@ -44,12 +42,18 @@ export class AuthService {
             }
         })
         if (checkUser) {
-            return new Response<string>("400", `existed`, null)
+            const checkResult = checkUser.email === dto.email
+                ? "Email"
+                : checkUser.account === dto.account
+                    ? "Account"
+                    : "Phone";
+            return new Response<string>("400", `${checkResult} exists`, null)
         }
         let newUser = {
             ...dto,
             password: hashPassword,
             role: user_role.user,
+            user_create: new Date()
 
         }
         await this.prisma.users.create({
@@ -57,5 +61,36 @@ export class AuthService {
         })
         return new Response<string>("201", "User created", newUser)
     }
+    async patchUser(user_id: number, dto) {
+        let checkUser = await this.prisma.users.findUnique({
+            where: {
+                user_id
+            }
+        })
+        if (!checkUser) return new Response<string>("400", "User not found", null)
+        let hashPassword = await bcrypt.hashSync(dto.password, 10)
+        let newUser = {
+            ...dto,
+            password: hashPassword,
+            user_create: new Date()
+        }
+        let checkUsePatch = await this.prisma.users.findMany({
+            where: {
+                OR: [
+                    { account: newUser.account },
+                    { email: newUser.email },
+                    { phone: newUser.phone }
+                ]
+            }
+        })
+        if (checkUsePatch.length >= 2) return new Response<string>("400", "Email or account or phone exits", checkUsePatch)
+        await this.prisma.users.update({
+            data: newUser,
+            where: {
+                user_id
+            }
+        })
+        return new Response<string>("201", "User patch", newUser)
 
+    }
 }

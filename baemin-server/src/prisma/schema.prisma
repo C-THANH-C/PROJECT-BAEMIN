@@ -51,7 +51,7 @@ model product {
   store_id            Int?
   category_id         Int?
   product_image       String?
-  product_create      DateTime?      @default(now())
+  product_create      DateTime?       @default(now())
   product_price       Int?
   product_rate        Int?
   product_quantity    Int?
@@ -82,7 +82,7 @@ model users {
   user_image  String?
   role        user_role
   user_create DateTime?    @default(now())
-  password    String       @db.VarChar(100) 
+  password    String       @db.VarChar(100)
   food_store  food_store[]
   order       order[]
 }

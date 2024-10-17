@@ -83,7 +83,8 @@ export class AuthService {
                 ]
             }
         })
-        if (checkUsePatch.length >= 2) return new Response<string>("400", "Email or account or phone exits", checkUsePatch)
+        console.log(checkUsePatch);
+        if (checkUsePatch.length >= 1) return new Response<string>("400", "Email or account or phone exits", checkUsePatch)
         await this.prisma.users.update({
             data: newUser,
             where: {

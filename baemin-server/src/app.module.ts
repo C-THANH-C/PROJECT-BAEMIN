@@ -8,6 +8,8 @@ import { CategoryModule } from './category/category.module';
 import { StoreModule } from './store/store.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './authGuard/jwt.strategy';
+import { ShipModule } from './ship/ship.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -22,7 +24,9 @@ import { JwtStrategy } from './authGuard/jwt.strategy';
     JwtModule.register({
       global: true,
       secret: "THANH"
-    })
+    }),
+    ShipModule,
+    OrderModule
   ],
   controllers: [],
   providers: [PrismaService, JwtStrategy],

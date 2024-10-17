@@ -7,16 +7,19 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { JwtConstants } from './constants';
 import { Request } from 'express';
+import { Reflector } from '@nestjs/core';
+import { Role } from './role.enum';
+import { ROLES_KEY } from './role';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private jwtService: JwtService) { }
+    constructor(private jwtService: JwtService, private reflector: Reflector) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         let isCheck = false
-        if (!token) {
+        if (!token) {   
             throw new UnauthorizedException();
         }
         try {
@@ -26,15 +29,21 @@ export class AuthGuard implements CanActivate {
                     secret: JwtConstants.secret
                 }
             );
-            // 💡 We're assigning the payload to the request object here
-            // so that we can access it in our route handlers
             request['user'] = payload;
-            if ((await payload).user === "admin" || ((await payload).user === "store"))
-                return isCheck = true;
+            const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+                context.getHandler(),
+                context.getClass(),
+            ]);
+            if (!requiredRoles) {
+                return true;
+            }
+            return requiredRoles.some((role) => payload.user?.includes(role));
+            // if ((await payload).user === requiredRoles)
+            //     return isCheck = true;
+
         } catch {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException("Bạn không có quyền");
         }
-        return isCheck;
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {

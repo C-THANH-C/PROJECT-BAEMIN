@@ -21,7 +21,7 @@ export class StoreService {
         })
         return new Response<string>("200", "Get all food store ", data)
     }
-    async createStore(dto, data: any) {
+    async createStore(dto, data: any, pathImg: Array<string>) {
         let user_id = data.user_id
         let checkStore = await this.prisma.food_store.findFirst({
             where: {
@@ -37,7 +37,8 @@ export class StoreService {
         }
         let newStore = {
             ...dto,
-            user_id
+            user_id,
+            store_image: pathImg || []
         }
         await this.prisma.food_store.create({
             data: newStore

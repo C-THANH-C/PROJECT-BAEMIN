@@ -6,7 +6,7 @@ import { Response } from 'src/response';
 export class ProductService {
 
     constructor(private prisma: PrismaService) { }
-    async getAllProduct() {
+    async getAllProduct(): Promise<any> {
         let data = await this.prisma.product.findMany({
             include: {
                 category: {
@@ -51,13 +51,13 @@ export class ProductService {
             return new Response<string>("200", "Find", data)
         else return new Response<string>("400", "Not find", null)
     }
-    async createProduct(dto) {
+    async createProduct(dto, pathImage: Array<string>) {
         let checkProduct = await this.prisma.product.findFirst({
             where: {
                 AND: {
                     product_name: dto.product_name,
-                    store_id: dto.store_id,
-                    category_id: dto.category_id
+                    store_id: +dto.store_id,
+                    category_id: +dto.category_id
                 }
             }
         })
@@ -65,8 +65,13 @@ export class ProductService {
         let newProduct = {
             ...dto,
             product_create: new Date(),
-
+            product_image: pathImage || [],
+            store_id: Number(dto.store_id),
+            category_id: Number(dto.category_id),
+            product_price: Number(dto.product_price),
+            product_quantity: Number(dto.product_quantity)
         }
+
         let data = await this.prisma.product.create({
             data: newProduct
         })
@@ -90,7 +95,8 @@ export class ProductService {
         })
         return new Response<string>("200", "Create successful product", productNew)
     }
-    async putProduct(dto, id: number) {
+    async updateProduct(dto, id: number, pathImage: Array<string>) {
+        console.log(dto);
         let checkProduct = await this.prisma.product.findFirst({
             where: {
                 product_id: id,
@@ -100,6 +106,11 @@ export class ProductService {
         let newProduct = {
             ...dto,
             product_create: new Date(),
+            product_image: pathImage || [],
+            store_id: Number(dto.store_id),
+            category_id: Number(dto.category_id),
+            product_price: Number(dto.product_price),
+            product_quantity: Number(dto.product_quantity)
 
         }
         let data = await this.prisma.product.update({

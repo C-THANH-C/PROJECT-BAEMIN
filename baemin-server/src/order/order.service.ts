@@ -136,7 +136,8 @@ export class OrderService {
                 order_product: true,
             },
         })
-        return new Response<string>("200", "order created", newOrder)
+        let checkProduct
+        return new Response<string>("200", "order created", data)
 
     }
 

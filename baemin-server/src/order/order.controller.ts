@@ -29,6 +29,9 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Patch()
+
+
+
   @Delete('/delete-order/:id')
   deleteOrder(@Param('id') id: number) {
     return this.orderService.deleteOrder(+id)

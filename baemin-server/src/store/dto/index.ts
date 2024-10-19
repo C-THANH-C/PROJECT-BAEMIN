@@ -1,4 +1,4 @@
-import { IsEmpty, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsEmpty, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 interface StoreInfo {
     store_description: string,
@@ -15,9 +15,9 @@ export class StoreDto {
     @IsString()
     @IsNotEmpty()
     store_information: StoreInfo;
-    @IsString()
-    @IsNotEmpty()
-    store_image: string;
+    @IsArray()
+    @IsOptional()
+    store_image: string[];
     @IsString()
     @IsNotEmpty()
     user_id: number;

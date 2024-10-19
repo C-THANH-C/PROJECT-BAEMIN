@@ -1,5 +1,4 @@
-import { user_role } from '@prisma/client';
-import { IsEmail, IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsOptional, IsArray } from 'class-validator';
 export class LoginDto {
     email: string;
     password: string;
@@ -30,8 +29,13 @@ export class SignUpDto {
 
     @IsOptional()
     user_create?: Date;
+
+    @IsArray()
+    @IsOptional()
+    @IsString({ each: true })
+    user_image: string[];
 }
-export class PatchDto {
+export class UpdateDto {
     @IsEmail()
     email: string;
 
@@ -61,4 +65,9 @@ export class PatchDto {
 
     @IsOptional()
     user_create?: Date; 
+
+    // @ApiProperty ({ type: 'array', items: { type: 'string', format: 'binary' } })
+    @IsArray()
+    @IsOptional()
+    user_image: any[];
 }

@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"thanh2@gmail.com\",\r\n    \"password\":\"thanh\"\r\n}",
+							"raw": "{\r\n    \"email\":\"thanh1@gmail.com\",\r\n    \"password\":\"thanh\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +44,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"thanh2@gmail.com\",\r\n    \"password\":\"thanh\",\r\n    \"full_name\":\"le thanh\",\r\n    \"address\":\"HCM city \",\r\n    \"account\":\"levanthanh2\"\r\n\r\n}",
+							"raw": "{\r\n    \"email\":\"thanh2112@gmail.com\",\r\n    \"password\":\"thanh\",\r\n    \"full_name\":\"le thanh\",\r\n    \"address\":\"HCM city \",\r\n    \"account\":\"levanthanh12\"\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -65,28 +65,97 @@
 					"response": []
 				},
 				{
-					"name": "patch-user/:id_user",
+					"name": "update-user/:id_user",
 					"request": {
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"thanh3@gmail.com\",\r\n    \"password\":\"thanh\",\r\n    \"full_name\":\"le thanh\",\r\n    \"address\":\"HCM city\",\r\n    \"account\":\"levanthanh3\",\r\n    \"role\":\"store\",\r\n    \"phone\":\"0123456712\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "thanh4111@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "thanh",
+									"type": "text"
+								},
+								{
+									"key": "full_name",
+									"value": "le thanh",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "123, hcm",
+									"type": "text"
+								},
+								{
+									"key": "account",
+									"value": "levanthanh4",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "123334445",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"disabled": true
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{domain}}/auth/patch-user/3",
+							"raw": "{{domain}}/auth/update-user/2",
 							"host": [
 								"{{domain}}"
 							],
 							"path": [
 								"auth",
-								"patch-user",
-								"3"
+								"update-user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{domain}}/auth/upload-avatar/2",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": [
+										"postman-cloud:///1ef5631f-8a7f-4dc0-a37f-ed8d7b7fb26d",
+										"postman-cloud:///1ef6470f-7b5d-4b60-9615-a474da7002b2"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/auth/upload-avatar/2",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"upload-avatar",
+								"2"
 							]
 						}
 					},
@@ -99,9 +168,21 @@
 			"item": [
 				{
 					"name": "get-all-product",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{domain}}/product/get-all-product",
 							"host": [
@@ -164,11 +245,21 @@
 				{
 					"name": "put-product/:id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{thanh store 2}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"product_name\":\"Phở Bò Đặc Biệt 33 \",\r\n    \"store_id\":1,\r\n    \"category_id\":3,\r\n    \"product_image\":\"\",\r\n    \"product_price\":44444,\r\n    \"product_quantity\":5,\r\n    \"product_description\":\"Hay\"\r\n}",
+							"raw": "{\r\n   \"product_name\":\"Phở Bò Đặc Biệt 33\",\r\n\"store_id\":7,\r\n\"category_id\":1,\r\n\"product_price\":44444,\r\n\"product_quantity\":5,\r\n\"product_description\":\"Hay\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -176,14 +267,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{domain}}/product/put-product/9",
+							"raw": "{{domain}}/product/put-product/57",
 							"host": [
 								"{{domain}}"
 							],
 							"path": [
 								"product",
 								"put-product",
-								"9"
+								"57"
 							]
 						}
 					},
@@ -258,12 +349,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"store_name\":\"Bún Chả Hương Liên\",\r\n    \"address\":\"123, le huu nghia\",\r\n    \"store_image\":\"htt\",\r\n    \"user_id\":4,\r\n    \"store_information\":{\r\n        \"store_description\":\"banh\",\r\n        \"store_title\":\"bun\",\r\n        \"store_open\":\"10-10\"\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\r\n    \"store_name\":\"Bún Chả Hương Liên\",\r\n    \"address\":\"123, le huu nghia\",\r\n    \"store_image\":\"htt\",\r\n    \"user_id\":4,\r\n    \"store_information\":{\r\n        \"store_description\":\"banh\",\r\n        \"store_title\":\"bun\",\r\n        \"store_open\":\"10-10\"\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "{{domain}}/store/create-store",

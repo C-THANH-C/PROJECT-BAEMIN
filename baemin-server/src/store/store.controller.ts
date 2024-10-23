@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { StoreDto, UpdateStoreDto } from './dto';
 import { Role } from 'src/authGuard/role.enum';
@@ -6,10 +6,14 @@ import { Roles, ROLES_KEY } from 'src/authGuard/role';
 import { AuthGuard } from 'src/authGuard/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-
+import { HttpExceptionFilter } from 'src/interceptor/exception';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags("Store")
+@UseFilters(HttpExceptionFilter)
 @Controller('/store')
 export class StoreController {
   constructor(private readonly storeService: StoreService) { }
+
 
   @Get("/get-all-store")
   getAllStore() {

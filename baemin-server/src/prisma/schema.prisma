@@ -32,6 +32,7 @@ model order {
   users         users?          @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
   order_product order_product[]
   shipping      shipping[]
+  order_status Boolean @default(false)
 }
 
 model order_product {
@@ -57,6 +58,7 @@ model product {
   product_quantity    Int?
   product_description String?
   order_product       order_product[]
+  base_path           String?         @db.VarChar(255)   
   category            category?       @relation(fields: [category_id], references: [category_id], onDelete: Cascade, onUpdate: NoAction)
   food_store          food_store?     @relation(fields: [store_id], references: [store_id], onDelete: Cascade, onUpdate: NoAction)
 }
@@ -79,7 +81,7 @@ model users {
   account     String       @unique @db.VarChar(100)
   full_name   String       @db.VarChar(255)
   address     String?      @db.VarChar(255)
-  user_image  String[]?
+  user_image  String[]
   role        user_role
   user_create DateTime?    @db.Timestamp(6)
   password    String       @db.VarChar(100)

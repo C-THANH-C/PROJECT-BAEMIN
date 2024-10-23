@@ -33,7 +33,6 @@ export class AuthService {
         }
     }
     async signUp(dto, filePath: Array<string>) {
-        console.log(dto);
         let hashPassword = await bcrypt.hashSync(dto.password, 10)
         let checkUser = await this.prisma.users.findFirst({
             where: {
@@ -65,8 +64,6 @@ export class AuthService {
         return new Response<string>("201", "User created", newUser)
     }
     async updateUser(user_id: number, dto, filePath) {
-
-
         let checkUser = await this.prisma.users.findUnique({
             where: {
                 user_id

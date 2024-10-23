@@ -6,7 +6,8 @@ import { Roles } from 'src/authGuard/role';
 import { Role } from 'src/authGuard/role.enum';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags("Product")
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, UseFilters } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -12,7 +12,8 @@ import { ShipModule } from './ship/ship.module';
 import { OrderModule } from './order/order.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-
+import { HttpExceptionFilter } from './interceptor/exception';
+@UseFilters(HttpExceptionFilter)
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -33,6 +34,7 @@ import { join } from 'path';
     }),
     ShipModule,
     OrderModule
+
   ],
   controllers: [],
   providers: [PrismaService, JwtStrategy],

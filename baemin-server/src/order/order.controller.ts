@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { AuthGuard } from 'src/authGuard/auth.guard';
+import { PrismaClient } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 // import { OrderDto } from './dto';
-
+@ApiTags("Order")
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) { }

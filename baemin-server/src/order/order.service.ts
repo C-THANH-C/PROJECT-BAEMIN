@@ -13,6 +13,7 @@ type orderProduct = {
 export class OrderService {
     constructor(private prisma: PrismaService) { }
 
+
     async getAllOrder() {
         let data = await this.prisma.order.findMany({
             include: {
@@ -34,7 +35,6 @@ export class OrderService {
                                 product_name: true,
                                 product_price: true,
                             }
-
                         }
                     }
                 }

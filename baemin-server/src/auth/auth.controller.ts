@@ -4,6 +4,9 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/authGuard/auth.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+
+@ApiTags("auth")
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -14,6 +17,7 @@ export class AuthController {
     return this.authService.login(dto)
   }
 
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor("user_image", 3, {
     storage: diskStorage({
       destination: process.cwd() + "/public/images",
@@ -31,6 +35,7 @@ export class AuthController {
         return file.filename
       })
     )
+
     return this.authService.signUp(dto, filePath)
   }
   // @UseGuards(AuthGuard)

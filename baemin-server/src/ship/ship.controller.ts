@@ -2,7 +2,8 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ShipService } from './ship.service';
 import { CreateShip } from './dto';
 import { AuthGuard } from 'src/authGuard/auth.guard';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags("Ship")
 @Controller('ship')
 export class ShipController {
   constructor(private readonly shipService: ShipService) { }

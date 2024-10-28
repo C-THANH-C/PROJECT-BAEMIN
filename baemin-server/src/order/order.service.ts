@@ -1,6 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { connect } from 'http2';
+import { sendMail } from 'src/config/sendMail';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Response } from 'src/response';
 // import { orderProduct } from './dto';
@@ -120,6 +121,11 @@ export class OrderService {
             user_id,
             order_create: new Date()
         }
+        let checkUser= await this.prisma.users.findFirst({
+            where:{
+                user_id
+            }
+        })
         let data = await this.prisma.order.create({
             data: {
                 user_id: newOrder.user_id,
@@ -136,7 +142,7 @@ export class OrderService {
                 order_product: true,
             },
         })
-        let checkProduct
+        sendMail(checkUser.email,"Đặt hàng qua baemin","<h1>Xác nhận đơn hàng thành công</h1>")
         return new Response<string>("200", "order created", data)
 
     }

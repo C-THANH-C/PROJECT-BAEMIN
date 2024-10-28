@@ -13,7 +13,6 @@ export class AuthController {
 
   @Post("/login")
   login(@Body() dto: LoginDto) {
-    console.log(dto);
     return this.authService.login(dto)
   }
 
@@ -42,7 +41,7 @@ export class AuthController {
   @UseInterceptors(FilesInterceptor("user_image", 3, {
     storage: diskStorage({
       destination: process.cwd() + "/public/images",
-      filename: (req, file, callback) => {
+      filename: (req, file, callback) => {     
         let data = new Date()
         callback(null, data.getTime() + "-" + file.originalname)
       },
@@ -56,7 +55,7 @@ export class AuthController {
         return file.filename
       })
     )
-    console.log(filePath)
+
     return this.authService.updateUser(+id, body, filePath)
   }
 

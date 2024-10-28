@@ -96,7 +96,6 @@ export class ProductService {
         return new Response<string>("200", "Create successful product", productNew)
     }
     async updateProduct(dto, id: number, pathImage: Array<string>) {
-        console.log(dto);
         let checkProduct = await this.prisma.product.findFirst({
             where: {
                 product_id: id,

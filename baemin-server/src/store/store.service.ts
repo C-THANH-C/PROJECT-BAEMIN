@@ -79,7 +79,6 @@ export class StoreService {
                 store_id
             }
         })
-        console.log(checkStore);
         if (!checkStore) return new Response<string>("400", "Store not found", null)
         await this.prisma.food_store.delete({
             where: { store_id }

@@ -1,15 +1,58 @@
 import { LoginDto, SignUpDto, UpdateDto } from './dto/index.dto';
-import { Body, Controller, Get, Param, Patch, Post, Res, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch, Post, Res, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/authGuard/auth.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { send } from 'process';
+import { Roles } from 'src/authGuard/role';
+import { Role } from 'src/authGuard/role.enum';
 
 @ApiTags("auth")
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService,
+    @Inject("AUTH_NAME") private Auth: ClientProxy
+  ) { }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @Get("/get-all-user")
+  async getAllUser() {
+    let allUsers = await this.Auth.send("get-all-user", "")
+    return allUsers
+
+  }
+  @Post("/login-service")
+  async loginService(@Body() dto: LoginDto) {
+    let login = await this.Auth.send("post-login", dto)
+    return login
+
+  }
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FilesInterceptor("user_image", 3, {
+    storage: diskStorage({
+      destination: process.cwd() + "/public/images",
+      filename: (req, file, callback) => {
+        let data = new Date()
+        callback(null, data.getTime() + "-" + file.originalname)
+      },
+    })
+  }))
+  @Post("/sign-up-service")
+  async SignUpService(@Body() dto: SignUpDto, @UploadedFile() files: Array<Express.Multer.File>) {
+    const file = files || []
+    const filePath: string[] = await Promise.all(
+      file.map((file) => {
+        return file.filename
+      })
+    )
+    let signUp = await this.Auth.send("sign-up", { dto, filePath })
+    return signUp
+  }
 
   @Post("/login")
   login(@Body() dto: LoginDto) {
@@ -41,7 +84,7 @@ export class AuthController {
   @UseInterceptors(FilesInterceptor("user_image", 3, {
     storage: diskStorage({
       destination: process.cwd() + "/public/images",
-      filename: (req, file, callback) => {     
+      filename: (req, file, callback) => {
         let data = new Date()
         callback(null, data.getTime() + "-" + file.originalname)
       },

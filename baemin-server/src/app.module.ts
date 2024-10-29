@@ -13,13 +13,14 @@ import { OrderModule } from './order/order.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { HttpExceptionFilter } from './interceptor/exception';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 @UseFilters(HttpExceptionFilter)
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       serveRoot: '/public/',
-    }), 
+    }),
     ConfigModule.forRoot({
       isGlobal: true
     }),
@@ -33,10 +34,9 @@ import { HttpExceptionFilter } from './interceptor/exception';
       secret: "THANH"
     }),
     ShipModule,
-    OrderModule
-
+    OrderModule,
   ],
   controllers: [],
   providers: [PrismaService, JwtStrategy],
 })
-export class AppModule {}
+export class AppModule { }

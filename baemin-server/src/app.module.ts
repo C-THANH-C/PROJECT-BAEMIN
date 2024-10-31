@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { HttpExceptionFilter } from './interceptor/exception';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AbstractHttpAdapter, APP_FILTER } from '@nestjs/core';
 @UseFilters(HttpExceptionFilter)
 @Module({
   imports: [
@@ -37,6 +38,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     OrderModule,
   ],
   controllers: [],
-  providers: [PrismaService, JwtStrategy],
+  providers: [PrismaService, JwtStrategy, {
+    provide: APP_FILTER,
+    useClass: HttpExceptionFilter
+  }],
 })
 export class AppModule { }

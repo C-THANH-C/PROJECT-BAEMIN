@@ -103,7 +103,6 @@ export class OrderService {
                                 product_name: true,
                                 product_price: true,
                             }
-
                         }
                     }
                 }
@@ -121,8 +120,8 @@ export class OrderService {
             user_id,
             order_create: new Date()
         }
-        let checkUser= await this.prisma.users.findFirst({
-            where:{
+        let checkUser = await this.prisma.users.findFirst({
+            where: {
                 user_id
             }
         })
@@ -142,7 +141,7 @@ export class OrderService {
                 order_product: true,
             },
         })
-        sendMail(checkUser.email,"Đặt hàng qua baemin","<h1>Xác nhận đơn hàng thành công</h1>")
+        sendMail(checkUser.email, "Đặt hàng qua baemin", "<h1>Xác nhận đơn hàng thành công</h1>")
         return new Response<string>("200", "order created", data)
 
     }

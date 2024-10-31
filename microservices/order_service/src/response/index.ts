@@ -1,4 +1,4 @@
-export class Response<T> {
+export class Response<T>{
     data: T | any;
     statusCode: string;
     message: string;

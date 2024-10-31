@@ -18,41 +18,7 @@ export class AuthController {
     @Inject("AUTH_NAME") private Auth: ClientProxy
   ) { }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.Admin)
-  @Get("/get-all-user")
-  async getAllUser() {
-    let allUsers = await this.Auth.send("get-all-user", "")
-    return allUsers
 
-  }
-  @Post("/login-service")
-  async loginService(@Body() dto: LoginDto) {
-    let login = await this.Auth.send("post-login", dto)
-    return login
-
-  }
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FilesInterceptor("user_image", 3, {
-    storage: diskStorage({
-      destination: process.cwd() + "/public/images",
-      filename: (req, file, callback) => {
-        let data = new Date()
-        callback(null, data.getTime() + "-" + file.originalname)
-      },
-    })
-  }))
-  @Post("/sign-up-service")
-  async SignUpService(@Body() dto: SignUpDto, @UploadedFile() files: Array<Express.Multer.File>) {
-    const file = files || []
-    const filePath: string[] = await Promise.all(
-      file.map((file) => {
-        return file.filename
-      })
-    )
-    let signUp = await this.Auth.send("sign-up", { dto, filePath })
-    return signUp
-  }
 
   @Post("/login")
   login(@Body() dto: LoginDto) {
@@ -119,5 +85,42 @@ export class AuthController {
     return this.authService.uploadAvatar(+id, file)
   }
 
+
+  //AUTH SERVICE
+  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @Get("/get-all-user")
+  async getAllUser() {
+    let allUsers = await this.Auth.send("get-all-user", "")
+    return allUsers
+
+  }
+  @Post("/login-service")
+  async loginService(@Body() dto: LoginDto) {
+    let login = await this.Auth.send("post-login", dto)
+    return login
+
+  }
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FilesInterceptor("user_image", 3, {
+    storage: diskStorage({
+      destination: process.cwd() + "/public/images",
+      filename: (req, file, callback) => {
+        let data = new Date()
+        callback(null, data.getTime() + "-" + file.originalname)
+      },
+    })
+  }))
+  @Post("/sign-up-service")
+  async SignUpService(@Body() dto: SignUpDto, @UploadedFile() files: Array<Express.Multer.File>) {
+    const file = files || []
+    const filePath: string[] = await Promise.all(
+      file.map((file) => {
+        return file.filename
+      })
+    )
+    let signUp = await this.Auth.send("sign-up", { dto, filePath })
+    return signUp
+  }
 }
 

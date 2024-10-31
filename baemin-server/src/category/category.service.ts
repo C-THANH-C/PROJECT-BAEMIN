@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Response } from 'src/response';
 
@@ -15,7 +15,8 @@ export class CategoryService {
                 category_id
             }
         })
-        if (data.length === 0) return new Response<string>("200", "Product not data", null)
+        // if (data.length === 0) return new Response<string>("200", "Product not data", null)
+        if (data.length === 0) throw new HttpException("Category not data", HttpStatus.NOT_FOUND)
         return new Response<string>("200", "Get category product", data)
 
     }

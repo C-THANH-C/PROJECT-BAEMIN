@@ -13,16 +13,12 @@ export class AppService {
 
     async getAllProduct() {
         let dataCache = await this.cacheManager.get("product_cache")
-        console.log("test cache")
         if (dataCache) {
-            console.log("tra cache")
-            return dataCache
+            return new Response<string>("200", "Get all prduct cache", dataCache)
         }
-
         let data = await this.prisma.product.findMany()
-        console.log("luu cache")
         this.cacheManager.set("product_cache", data)
-        return data
+        return new Response<string>("200", "Get all prduct cache", data)
     }
 
     async updateProduct({ order_id }): Promise<Response<string>> {
@@ -69,14 +65,7 @@ export class AppService {
         }
     }
     async getElastic({ name }) {
-        // let data = await this.elasticService.search({
-        //     index: "product_index",
-        //     query: {
-        //         match: {
-        //             "product_name": `${name}`
-        //         }
-        //     }
-        // })
+
         let data = await this.elasticService.search({
             index: "product_index"
         })

@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  baemin-server:
+    container_name: baemin-server
+    build: ./baemin-server
+    environment:
+      - DATABASE_URL=postgresql://postgres:1234@some-postgres:5432/baemin_db
+    ports:
+      - 8080:8080
+    networks:
+      - THANH
+
+  auth-service:
+    container_name: auth-service
+    build: ./microservices/auth_service
+    environment:
+      - DATABASE_URL=postgresql://postgres:1234@some-postgres:5432/baemin_db
+    networks:
+      - THANH
+
+  order-service:
+    container_name: order-service
+    build: ./microservices/order_service
+    environment:
+      - DATABASE_URL=postgresql://postgres:1234@some-postgres:5432/baemin_db
+    networks:
+      - THANH
+
+  product-service:
+    container_name: product-service
+    build: ./microservices/product_service
+    environment:
+      - DATABASE_URL=postgresql://postgres:1234@some-postgres:5432/baemin_db
+      - REDIS_HOST = some-redis
+      - REDIS_PORT =6379
+      - REDIS_PASS=1234
+      - REDIS_TTL=5000
+      - ELASTIC_NODE=https://elasticsearch:9200
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASS=123456
+    networks:
+      - THANH
+
+networks:
+  THANH:
+    external: true

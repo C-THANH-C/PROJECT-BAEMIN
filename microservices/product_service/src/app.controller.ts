@@ -15,7 +15,6 @@ export class AppController {
 
   @MessagePattern("all-products")
   async getAllProduct() {
-
     return this.appService.getAllProduct()
   }
 

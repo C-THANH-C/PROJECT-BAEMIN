@@ -10,5 +10,4 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     this.$use(checkNonNegativeValue)
     await this.$connect();
   }
-
 }

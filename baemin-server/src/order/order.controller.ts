@@ -11,7 +11,7 @@ import { ClientProxy } from '@nestjs/microservices';
 export class OrderController {
   constructor(private readonly orderService: OrderService,
     @Inject("ORDER_NAME") private Order: ClientProxy,
-    @Inject("PRODUCT_NAME") private Product: ClientProxy
+    
   ) { }
 
   @Get("get-all-order")

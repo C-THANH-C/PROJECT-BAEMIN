@@ -1,10 +1,29 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
 import { Response } from "./response"
-
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager'
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 @Injectable()
 export class AppService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private prisma: PrismaService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        private elasticService: ElasticsearchService
+    ) { }
+
+
+    async getAllProduct() {
+        let dataCache = await this.cacheManager.get("product_cache")
+        console.log("test cache")
+        if (dataCache) {
+            console.log("tra cache")
+            return dataCache
+        }
+
+        let data = await this.prisma.product.findMany()
+        console.log("luu cache")
+        this.cacheManager.set("product_cache", data)
+        return data
+    }
 
     async updateProduct({ order_id }): Promise<Response<string>> {
         try {
@@ -49,4 +68,21 @@ export class AppService {
             );
         }
     }
+    async getElastic({ name }) {
+        // let data = await this.elasticService.search({
+        //     index: "product_index",
+        //     query: {
+        //         match: {
+        //             "product_name": `${name}`
+        //         }
+        //     }
+        // })
+        let data = await this.elasticService.search({
+            index: "product_index"
+        })
+        console.log(data)
+        return data
+    }
+
+
 }
